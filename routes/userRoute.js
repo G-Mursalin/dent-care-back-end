@@ -1,7 +1,7 @@
 const express = require("express");
 const {
   getAllUsers,
-  postAUser,
+  createAUser,
   getAUser,
   deleteAUser,
   updateAUser,
@@ -10,7 +10,7 @@ const {
 // Routs
 const userRoute = express.Router();
 
-userRoute.route("/").get(getAllUsers).post(postAUser);
+userRoute.route("/").get(getAllUsers).post(createAUser);
 userRoute.route("/:id").get(getAUser).delete(deleteAUser).patch(updateAUser);
 
 module.exports = userRoute;

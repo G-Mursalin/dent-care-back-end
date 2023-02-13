@@ -4,8 +4,7 @@ const { catchAsync } = require("../utils/catchAsync");
 // Controllers
 
 const getAllBookings = catchAsync(async (req, res) => {
-  const bookings = await Booking.find();
-
+  const bookings = await Booking.find(req.query);
   res.status(200).send({
     status: "success",
     results: bookings.length,
