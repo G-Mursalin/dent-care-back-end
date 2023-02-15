@@ -1,4 +1,5 @@
 const express = require("express");
+const { protect } = require("../controllers/userController");
 const {
   createABooking,
   getAllBookings,
@@ -7,6 +8,6 @@ const {
 // Routs
 const bookingRoute = express.Router();
 
-bookingRoute.route("/").get(getAllBookings).post(createABooking);
+bookingRoute.route("/").get(protect, getAllBookings).post(createABooking);
 
 module.exports = bookingRoute;
