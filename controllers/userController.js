@@ -12,6 +12,16 @@ const createToken = (email) => {
 };
 
 // Handlers
+const restrictTo = (...role) => {
+  return (req, res, next) => {
+    if (!role.includes(req.user.role)) {
+      return next(
+        new AppError("You do not have permission to perform this action", 403)
+      );
+    }
+    next();
+  };
+};
 const protect = catchAsync(async (req, res, next) => {
   let token;
 
@@ -42,6 +52,11 @@ const protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+const isAdmin = catchAsync(async (req, res) => {
+  const isAdmin = req.user.role === "admin";
+  res.status(200).send({ isAdmin });
+});
+
 const getJWTToken = catchAsync(async (req, res) => {
   const { email } = req.query;
   const user = await User.findOne({ email });
@@ -54,11 +69,15 @@ const getJWTToken = catchAsync(async (req, res) => {
   res.status(500).send({ accessToken: "" });
 });
 
-const getAllUsers = (req, res) => {
-  res
-    .status(500)
-    .send({ message: "This route is not define yet (getAllUsers)" });
-};
+const getAllUsers = catchAsync(async (req, res) => {
+  const users = await User.find();
+  res.status(200).send({
+    status: "success",
+    results: users.length,
+    data: { users },
+  });
+});
+
 const createAUser = catchAsync(async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
 
@@ -83,19 +102,28 @@ const deleteAUser = (req, res) => {
     .status(500)
     .send({ message: "This route is not define yet (deleteAUser)" });
 };
-const updateAUser = (req, res) => {
+
+const makeAUserAdmin = catchAsync(async (req, res) => {
   const { id } = req.params;
+  const user = await User.findByIdAndUpdate({ _id: id }, { role: "admin" });
+
+  if (!user) {
+    return res.status(200).send({ status: "User not found", data: { user } });
+  }
+
   res
-    .status(500)
-    .send({ message: "This route is not define yet (updateAUser)" });
-};
+    .status(200)
+    .send({ status: "successfully updated to admin role", data: { user } });
+});
 
 module.exports = {
   getJWTToken,
   protect,
   getAllUsers,
   createAUser,
+  isAdmin,
   getAUser,
   deleteAUser,
-  updateAUser,
+  makeAUserAdmin,
+  restrictTo,
 };
