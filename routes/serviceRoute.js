@@ -1,4 +1,5 @@
 const express = require("express");
+const { protect } = require("../controllers/userController");
 const {
   getAllServices,
   getAllServicesName,
@@ -8,6 +9,6 @@ const {
 const serviceRoute = express.Router();
 
 serviceRoute.route("/").get(getAllServices);
-serviceRoute.route("/name").get(getAllServicesName);
+serviceRoute.route("/name").get(protect, getAllServicesName);
 
 module.exports = serviceRoute;
