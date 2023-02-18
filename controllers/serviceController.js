@@ -53,4 +53,14 @@ const getAllServices = catchAsync(async (req, res) => {
   });
 });
 
-module.exports = { getAllServices };
+const getAllServicesName = catchAsync(async (req, res) => {
+  const services_name = await Service.find().select({ name: 1 });
+
+  res.status(200).send({
+    status: "success",
+    results: services_name.length,
+    data: { servicesName: services_name },
+  });
+});
+
+module.exports = { getAllServices, getAllServicesName };
