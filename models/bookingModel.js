@@ -36,6 +36,12 @@ const bookingSchema = new mongoose.Schema({
     type: String,
     required: [true, "Patent Phone is required!"],
   },
+  paid: {
+    type: Boolean,
+  },
+  transactionId: {
+    type: String,
+  },
 });
 
 // Model

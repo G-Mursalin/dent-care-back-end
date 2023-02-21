@@ -35,4 +35,15 @@ const createABooking = catchAsync(async (req, res) => {
   }
 });
 
-module.exports = { createABooking, getAllBookings };
+const updateABooking = catchAsync(async (req, res, next) => {
+  const booking = await Booking.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  if (!booking) {
+    return next(new AppError("No tour found with that ID", 404));
+  }
+  res.status(200).send({ status: "successfully paid", data: { booking } });
+});
+
+module.exports = { createABooking, getAllBookings, updateABooking };
