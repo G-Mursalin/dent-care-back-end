@@ -28,7 +28,7 @@ const createADoctor = catchAsync(async (req, res) => {
 const deleteADoctor = catchAsync(async (req, res) => {
   const doctor = await Doctor.findByIdAndDelete(req.params.id);
   if (!doctor) {
-    return next(new AppError("No tour found with that ID", 404));
+    return next(new AppError("No doctor found with that ID", 404));
   }
   res.status(201).send({ status: "successfully deleted", data: null });
 });

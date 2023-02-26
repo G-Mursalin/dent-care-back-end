@@ -6,7 +6,6 @@ const {
   getAllUsers,
   createAUser,
   isAdmin,
-  getAUser,
   deleteAUser,
   makeAUserAdmin,
 } = require("./../controllers/userController");
@@ -16,11 +15,13 @@ const userRoute = express.Router();
 
 userRoute.route("/jwt").get(getJWTToken);
 userRoute.route("/admin").get(protect, isAdmin);
-userRoute.route("/").get(getAllUsers).post(createAUser);
+userRoute
+  .route("/")
+  .get(protect, restrictTo("admin"), getAllUsers)
+  .post(createAUser);
 userRoute
   .route("/:id")
-  .get(getAUser)
-  .delete(deleteAUser)
+  .delete(protect, restrictTo("admin"), deleteAUser)
   .patch(protect, restrictTo("admin"), makeAUserAdmin);
 
 module.exports = userRoute;

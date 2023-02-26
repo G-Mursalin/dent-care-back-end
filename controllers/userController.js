@@ -92,16 +92,13 @@ const createAUser = catchAsync(async (req, res) => {
   });
 });
 
-const getAUser = (req, res) => {
-  const { id } = req.params;
-  res.status(500).send({ message: "This route is not define yet (getAUser)" });
-};
-const deleteAUser = (req, res) => {
-  const { id } = req.params;
-  res
-    .status(500)
-    .send({ message: "This route is not define yet (deleteAUser)" });
-};
+const deleteAUser = catchAsync(async (req, res) => {
+  const user = await User.findByIdAndDelete(req.params.id);
+  if (!user) {
+    return next(new AppError("No user found with that ID", 404));
+  }
+  res.status(201).send({ status: "successfully deleted", user: null });
+});
 
 const makeAUserAdmin = catchAsync(async (req, res) => {
   const { id } = req.params;
@@ -122,7 +119,6 @@ module.exports = {
   getAllUsers,
   createAUser,
   isAdmin,
-  getAUser,
   deleteAUser,
   makeAUserAdmin,
   restrictTo,
