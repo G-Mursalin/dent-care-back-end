@@ -11,7 +11,7 @@ const doctorRoute = express.Router();
 doctorRoute
   .route("/")
   .post(protect, restrictTo("admin"), createADoctor)
-  .get(protect, restrictTo("admin"), getAllDoctors);
+  .get(getAllDoctors);
 doctorRoute.route("/:id").delete(protect, restrictTo("admin"), deleteADoctor);
 
 module.exports = doctorRoute;
